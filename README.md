@@ -17,8 +17,7 @@
 - [Training](#training)
 - [Evaluation](#evaluation)
 - [Export & Inference](#export--inference)
-- [Tips for Stability & Speed](#tips-for-stability--speed)
-- [Results Placeholder](#results-placeholder)
+- [Results Placeholder](#results)
 - [Roadmap](#roadmap)
 - [Citations](#citations)
 - [License](#license)
@@ -94,19 +93,7 @@ This helps prevent excessive distortion in the generated output.
 - Optionally, metrics like **PESQ** or **STOI** can be added if ground-truth references are available.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Repository Layout
 
 ```
 ├─ src/
@@ -121,8 +108,79 @@ This helps prevent excessive distortion in the generated output.
 ├─ README.md
 └─ LICENSE
 ```
+## Installation
+
+# Python 3.10+ recommended
+pip install -r requirements.txt
+
+## Training
+
+Main knobs live at the top of `src/train.py`:
+
+```
+NUM_EPOCHS=10
+BATCH_SIZE=6
+LR=1e-4
+SUBSET=0.01          # fraction of dataset sampled per epoch
+REVERB_DIRS=[...]
+CLEAN_DIR="..."
+```
+## 📊 Results (Placeholder)
+
+*Fill this once training is complete.*
+
+| Model (16 kHz)                | Parameters | Train Data   | Validation SI‑SDR ↑ |
+|------------------------------|------------|--------------|----------------------|
+| Conv‑TasNet (512‑128, 3×8)   | ~8 M       | YourDataset  | XX.X dB              |
+| Larger (1024‑512, 7×8)       | ~35 M      | YourDataset  | YY.Y dB              |
 
 
+## 🛣️ Roadmap
+
+- [ ] Add multi‑resolution STFT auxiliary loss
+- [ ] Add PESQ/STOI evaluation metrics
+- [ ] Implement causal (streaming) variant
+- [ ] Optional: support DeepSpeed ZeRO / FSDP for larger models
+
+---
+
+## 📚 Citations
+
+### Conv‑TasNet (architecture inspiration)  
+Y. Luo, N. Mesgarani. *Conv‑TasNet: Surpassing Ideal Time‑Frequency Magnitude Estimation for Speech Separation*, IEEE/ACM TASLP, 2019.  
+[https://arxiv.org/abs/1809.07454](https://arxiv.org/abs/1809.07454)
+
+### SI‑SDR (objective/metric)  
+J. Le Roux, S. Wisdom, H. Erdogan, J. R. Hershey. *SDR – Half‑Baked or Well Done?*, ICASSP 2019.  
+[https://arxiv.org/abs/1811.02508](https://arxiv.org/abs/1811.02508)
+
+### TorchMetrics: SI‑SDR implementation  
+[https://torchmetrics.readthedocs.io/en/stable/audio/scale_invariant_signal_distortion_ratio.html](https://torchmetrics.readthedocs.io/en/stable/audio/scale_invariant_signal_distortion_ratio.html)
+
+### PyTorch AMP (mixed precision)  
+[https://pytorch.org/docs/stable/amp.html](https://pytorch.org/docs/stable/amp.html)
+
+### bitsandbytes (optional 8‑bit optimizers)  
+[https://github.com/TimDettmers/bitsandbytes](https://github.com/TimDettmers/bitsandbytes)
+
+## 📄 License
+
+MIT — see [LICENSE](./LICENSE).
+
+---
+
+## ⚖️ Ethics & Intended Use
+
+This project is intended for **speech quality enhancement**, such as:
+
+- Removing room reverberation from your own recordings
+- Improving accessibility
+- Enhancing teleconferencing audio
+
+❗ **Please do not** deploy models to circumvent privacy or safety measures, such as:
+
+- Undoing intentional obfuscation (e.g., face blurring or audio masking)
+- Processing third-party media without consent
 
 
 
