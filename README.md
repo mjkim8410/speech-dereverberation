@@ -60,6 +60,7 @@ tcn_kernel_size=3
 tcn_layers=8                # per stack (dilations 1..128)
 tcn_stacks=3                # number of repeats
 causal=False
+```
 
 ## Loss & Metrics
 
@@ -101,7 +102,7 @@ Implemented via **TorchMetrics**’ `ScaleInvariantSignalDistortionRatio`.
 
 
 
-
+```
 ├─ src/
 │  ├─ model.py            # ConvTasNet + TCN blocks + GlobalChannelLayerNorm
 │  ├─ train.py            # training loop
@@ -113,7 +114,7 @@ Implemented via **TorchMetrics**’ `ScaleInvariantSignalDistortionRatio`.
 ├─ checkpoints/           # saved model weights (.pth)
 ├─ README.md
 └─ LICENSE
-
+```
 
 
 
