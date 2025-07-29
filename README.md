@@ -62,30 +62,36 @@ tcn_stacks=3                # number of repeats
 causal=False
 ```
 
-## Loss & Metrics
+## 📉 Loss & Metrics
 
-### Training loss — **negative SI‑SDR**
+### 🎯 Training Loss — Negative SI‑SDR
 
-We minimize the **negative** Scale‑Invariant Signal‑to‑Distortion Ratio between the predicted enhanced waveform \(\hat{s}\) and the clean target \(s\):
+We minimize the **negative Scale-Invariant Signal-to-Distortion Ratio (SI‑SDR)** between the predicted enhanced waveform `ŝ` and the clean target `s`.
 
-\[
-\text{SI‑SDR}(\hat{s}, s)=10\log_{10}\frac{\| \alpha s \|^2}{\|\hat{s}-\alpha s\|^2}, 
-\quad
-\alpha=\frac{\langle \hat{s}, s\rangle}{\|s\|^2}
-\]
+**SI-SDR formula:**
 
-\[
-\mathcal{L} \;=\; -\,\text{mean}_{\text{batch}}\big[\text{SI‑SDR}(\hat{s}, s)\big]
-\]
+**SI‑SDR(ŝ, s)** = 10 · log₁₀ ( ‖α · s‖² / ‖ŝ − α · s‖² )  
+  where α = ⟨ŝ, s⟩ / ‖s‖²
 
-Implemented via **TorchMetrics**’ `ScaleInvariantSignalDistortionRatio`.
 
-*Optional regularizer.* An amplitude **clipping penalty** (off by default) can discourage \(|\hat{s}|>1\).
+**Loss function:**
 
-### Validation metric
+L = − mean_batch[SI‑SDR(ŝ, s)]
 
-- **SI‑SDR (dB)** — higher is better  
-  (Optionally add **PESQ** / **STOI** if available.)
+
+This is implemented using **TorchMetrics**’ `ScaleInvariantSignalDistortionRatio` class.
+
+#### Optional: Clipping Penalty
+
+An optional **amplitude clipping penalty** (off by default) discourages values of `|ŝ| > 1`.  
+This helps prevent excessive distortion in the generated output.
+
+---
+
+### ✅ Validation Metric
+
+- **SI‑SDR (in dB)** — Higher is better.
+- Optionally, metrics like **PESQ** or **STOI** can be added if ground-truth references are available.
 
 
 
