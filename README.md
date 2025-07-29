@@ -61,9 +61,9 @@ tcn_stacks=3                # number of repeats
 causal=False
 ```
 
-## 📉 Loss & Metrics
+## Loss & Metrics
 
-### 🎯 Training Loss — Negative SI‑SDR
+### Training Loss — Negative SI‑SDR
 
 We minimize the **negative Scale-Invariant Signal-to-Distortion Ratio (SI‑SDR)** between the predicted enhanced waveform `ŝ` and the clean target `s`.
 
@@ -87,7 +87,7 @@ This helps prevent excessive distortion in the generated output.
 
 ---
 
-### ✅ Validation Metric
+### Validation Metric
 
 - **SI‑SDR (in dB)** — Higher is better.
 - Optionally, metrics like **PESQ** or **STOI** can be added if ground-truth references are available.
@@ -135,7 +135,7 @@ CLEAN_DIR="..."
 | Larger (1024‑512, 7×8)       | ~35 M      | YourDataset  | YY.Y dB              |
 
 
-## 🛣️ Roadmap
+## Roadmap
 
 - [ ] Add multi‑resolution STFT auxiliary loss
 - [ ] Add PESQ/STOI evaluation metrics
@@ -144,7 +144,7 @@ CLEAN_DIR="..."
 
 ---
 
-## 📚 Citations
+## Citations
 
 ### Conv‑TasNet (architecture inspiration)  
 Y. Luo, N. Mesgarani. *Conv‑TasNet: Surpassing Ideal Time‑Frequency Magnitude Estimation for Speech Separation*, IEEE/ACM TASLP, 2019.  
@@ -163,13 +163,13 @@ J. Le Roux, S. Wisdom, H. Erdogan, J. R. Hershey. *SDR – Half‑Baked or Well 
 ### bitsandbytes (optional 8‑bit optimizers)  
 [https://github.com/TimDettmers/bitsandbytes](https://github.com/TimDettmers/bitsandbytes)
 
-## 📄 License
+## License
 
 MIT — see [LICENSE](./LICENSE).
 
 ---
 
-## ⚖️ Ethics & Intended Use
+## Ethics & Intended Use
 
 This project is intended for **speech quality enhancement**, such as:
 
