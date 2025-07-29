@@ -1,0 +1,6 @@
+torch>=2.0
+torchaudio>=2.0
+bitsandbytes>=0.41.0
+torchmetrics>=1.0.0
+tqdm>=4.64.0
+soundfile>=0.12.1
