@@ -61,6 +61,31 @@ tcn_layers=8                # per stack (dilations 1..128)
 tcn_stacks=3                # number of repeats
 causal=False
 
+## Loss & Metrics
+
+### Training loss — **negative SI‑SDR**
+
+We minimize the **negative** Scale‑Invariant Signal‑to‑Distortion Ratio between the predicted enhanced waveform \(\hat{s}\) and the clean target \(s\):
+
+\[
+\text{SI‑SDR}(\hat{s}, s)=10\log_{10}\frac{\| \alpha s \|^2}{\|\hat{s}-\alpha s\|^2}, 
+\quad
+\alpha=\frac{\langle \hat{s}, s\rangle}{\|s\|^2}
+\]
+
+\[
+\mathcal{L} \;=\; -\,\text{mean}_{\text{batch}}\big[\text{SI‑SDR}(\hat{s}, s)\big]
+\]
+
+Implemented via **TorchMetrics**’ `ScaleInvariantSignalDistortionRatio`.
+
+*Optional regularizer.* An amplitude **clipping penalty** (off by default) can discourage \(|\hat{s}|>1\).
+
+### Validation metric
+
+- **SI‑SDR (dB)** — higher is better  
+  (Optionally add **PESQ** / **STOI** if available.)
+
 
 
 
