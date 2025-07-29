@@ -13,11 +13,9 @@
 - [Loss & Metrics](#loss--metrics)
 - [Repository Layout](#repository-layout)
 - [Installation](#installation)
-- [Data Preparation](#data-preparation)
+- [Data](#data)
 - [Training](#training)
-- [Evaluation](#evaluation)
-- [Export & Inference](#export--inference)
-- [Results Placeholder](#results)
+- [Results](#results)
 - [Roadmap](#roadmap)
 - [Citations](#citations)
 - [License](#license)
@@ -113,6 +111,29 @@ This helps prevent excessive distortion in the generated output.
 # Python 3.10+ recommended
 pip install -r requirements.txt
 
+## Data
+
+This project trains on **paired reverberant-clean speech audio**, where each sample is a 10-second mono waveform pair:
+
+- **Reverberant input** (`x`) — artificially reverberated speech  
+- **Clean target** (`s`) — the original dry (clean) speech
+
+### Source
+
+Clean speech recordings were sourced from the **[LibriVox Project](https://librivox.org/)** — a public domain collection of audiobooks read by volunteers.  
+LibriVox offers diverse accents, speaker styles, and recording conditions, providing a rich set of high-quality voice data.
+
+### Reverberation Augmentation
+
+To simulate real-world reverberant environments, each clean audio file was **convolved with room impulse responses (RIRs)** from the  
+**[OpenAIR database](https://www.openair.hosted.york.ac.uk/)** — a curated collection of acoustically measured spaces.
+
+### Format
+
+- All audio is **mono**, sampled at **16 kHz**, and segmented into **10-second chunks**  
+
+
+
 ## Training
 
 Main knobs live at the top of `src/train.py`:
@@ -125,7 +146,7 @@ SUBSET=0.01          # fraction of dataset sampled per epoch
 REVERB_DIRS=[...]
 CLEAN_DIR="..."
 ```
-## 📊 Results (Placeholder)
+## Results 
 
 *Fill this once training is complete.*
 
