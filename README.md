@@ -94,17 +94,21 @@ This helps prevent excessive distortion in the generated output.
 ## Repository Layout
 
 ```
-├─ src/
-│  ├─ model.py            # ConvTasNet + TCN blocks + GlobalChannelLayerNorm
-│  ├─ train.py            # training loop
-│  ├─ dereverb.py         # inference / export helpers
-│  └─ utils.py            # I/O and helpers (optional)
-├─ data/
-│  ├─ reverb_chunks/      # reverberant inputs (10 s segments)
-│  └─ clean_chunks/       # clean targets (matched names)
-├─ checkpoints/           # saved model weights (.pth)
-├─ README.md
-└─ LICENSE
+├── checkpoints_v1/           # Checkpoints for model V1
+├── checkpoints_v2/           # Checkpoints for model V2
+├── checkpoints_v3/           # Checkpoints for model V3 
+├── out/                      # outputs
+├── src/                      # Source code: model, training script, etc.
+│   ├── model.py
+│   ├── train.py
+│   ├── dereverb.py
+│   └── (other utils)
+├── .gitattributes            
+├── .gitignore                
+├── LICENSE                   
+├── README.md                 
+└── requirements.txt          
+
 ```
 ## Installation
 
