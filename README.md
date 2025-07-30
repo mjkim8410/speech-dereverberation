@@ -134,8 +134,8 @@ To simulate real-world reverberant environments, each clean audio file was **con
 
 ### Format
 
-- All audio is **mono**, sampled at **16 kHz**, and segmented into **10-second chunks**  
-
+- The clean speech recordings are a little over **235,000 hours** in total.
+- All audio is **mono**, sampled at **16 kHz**, and segmented into **10-second chunks** in **MP3** 
 
 
 ## Training
