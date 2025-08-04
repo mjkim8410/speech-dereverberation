@@ -132,10 +132,6 @@ LibriVox offers diverse accents, speaker styles, and recording conditions, provi
 To simulate real-world reverberant environments, each clean audio file was **convolved with room impulse responses (RIRs)** from the  
 **[OpenAIR database](https://www.openair.hosted.york.ac.uk/)** — a curated collection of acoustically measured spaces.
 
-### Raw Data
-
-- The clean speech recordings are a little over **235,000 hours** in total.
-
 ### Data Processing
 - All audio is converted to **mono**, sampled at **16 kHz**, and segmented into **10-second chunks** in **WAV**
 - Original audio had its quality measured by using **DNSMOS** with the results shown below.
@@ -154,7 +150,9 @@ To simulate real-world reverberant environments, each clean audio file was **con
   <img src="dnsmos_plots/ovrl_density.png"  width="22%">
 </p>
 
-
+- Few clips that had peaks were also discarded. 
+- Remaining audio clips were scaled up right before the point of peaking.
+- Audio clips remaining after the processing above was **1,830 hours** in total.
 
 ## Training
 
@@ -228,6 +226,7 @@ This project is intended for **speech quality enhancement**, such as:
 
 - Undoing intentional obfuscation (e.g., face blurring or audio masking)
 - Processing third-party media without consent
+
 
 
 
