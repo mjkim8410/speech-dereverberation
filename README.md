@@ -139,7 +139,7 @@ To simulate real-world reverberant environments, each clean audio file was **con
 ### Data Processing
 - All audio is converted to **mono**, sampled at **16 kHz**, and segmented into **10-second chunks** in **WAV**
 - Original audio had its quality measured by using **DNSMOS** with the results shown below.
-
+![p808](dnsmos_plots/p808_density_orig.png)! [sig](dnsmos_plots/sig_density_orig.png) ![bak](dnsmos_plots/bak_density_orig.png) ![ovrl](dnsmos_plots/ovrl_density_orig.png)
 - All audio files with a score under: P808=3.5 ,SIG=3.55, BAK=4.0, OVRL=3.2 were discarded with the results shown below.
 
 
@@ -215,6 +215,7 @@ This project is intended for **speech quality enhancement**, such as:
 
 - Undoing intentional obfuscation (e.g., face blurring or audio masking)
 - Processing third-party media without consent
+
 
 
 
