@@ -132,10 +132,15 @@ LibriVox offers diverse accents, speaker styles, and recording conditions, provi
 To simulate real-world reverberant environments, each clean audio file was **convolved with room impulse responses (RIRs)** from the  
 **[OpenAIR database](https://www.openair.hosted.york.ac.uk/)** — a curated collection of acoustically measured spaces.
 
-### Format
+### Raw Data
 
 - The clean speech recordings are a little over **235,000 hours** in total.
-- All audio is **mono**, sampled at **16 kHz**, and segmented into **10-second chunks** in **MP3** 
+
+### Data Processing
+- All audio is converted to **mono**, sampled at **16 kHz**, and segmented into **10-second chunks** in **WAV**
+- Original audio had its quality measured by using **DNSMOS** with the results shown below.
+
+- All audio files with a score under: P808=3.5 ,SIG=3.55, BAK=4.0, OVRL=3.2 were discarded with the results shown below.
 
 
 ## Training
@@ -182,6 +187,10 @@ J. Le Roux, S. Wisdom, H. Erdogan, J. R. Hershey. *SDR – Half‑Baked or Well 
 ### TorchMetrics: SI‑SDR implementation  
 [https://torchmetrics.readthedocs.io/en/stable/audio/scale_invariant_signal_distortion_ratio.html](https://torchmetrics.readthedocs.io/en/stable/audio/scale_invariant_signal_distortion_ratio.html)
 
+### DNSMOS (non-intrusive speech-quality metric)
+C. K. A. Reddy, V. Gopal, R. Cutler. DNSMOS: A Non-Intrusive Perceptual Objective Speech Quality Metric to Evaluate Noise Suppressors, arXiv preprint arXiv:2010.15258, 2020.
+[https://arxiv.org/abs/2010.15258](https://arxiv.org/abs/2010.15258)
+
 ### PyTorch AMP (mixed precision)  
 [https://pytorch.org/docs/stable/amp.html](https://pytorch.org/docs/stable/amp.html)
 
@@ -206,6 +215,7 @@ This project is intended for **speech quality enhancement**, such as:
 
 - Undoing intentional obfuscation (e.g., face blurring or audio masking)
 - Processing third-party media without consent
+
 
 
 
