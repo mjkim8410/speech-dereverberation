@@ -7,6 +7,9 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+> ⚠️ **Project status: Active development**  
+> This repository is a work in progress. Interfaces, file paths, and results may change without notice until the first stable release.
+
 ## Table of Contents
 - [Overview](#overview)
 - [Model Architecture](#model-architecture)
@@ -226,6 +229,7 @@ This project is intended for **speech quality enhancement**, such as:
 
 - Undoing intentional obfuscation (e.g., face blurring or audio masking)
 - Processing third-party media without consent
+
 
 
 
