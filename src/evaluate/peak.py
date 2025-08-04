@@ -32,11 +32,11 @@ from tqdm import tqdm
 # ──────────────────────────────────────────────────────────────────────────────
 # CONFIGURATION – edit and forget about argv/argparse
 # ──────────────────────────────────────────────────────────────────────────────
-INPUT_GLOB   = "../../data/clean_chunks_wav/*.wav"   # which WAVs to process
+INPUT_GLOB   = "../../data/clean_chunks/*.wav"   # which WAVs to process
 OUTPUT_DIR   = "../../data/clean_chunks_normalised/"  # None → next to source
 SUFFIX       = "_norm"                                # only if OUTPUT_DIR is None
 TARGET_PEAK  = 0.999                                  # absolute peak after gain
-DELETE_CLIPPED = True                                 # remove files whose |sample|>1
+DELETE_CLIPPED = False                                 # remove files whose |sample|>1
 SR           = 16000                                  # analysis (and output) rate
 # ──────────────────────────────────────────────────────────────────────────────
 

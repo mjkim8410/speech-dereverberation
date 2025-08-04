@@ -7,7 +7,7 @@ def apply_afir_batch(
     output_folder,
     wet,
     dry,
-    audio_extensions=(".wav", ".mp3", ".flac", ".ogg")
+    audio_extensions=(".wav")
 ):
     """
     Applies FFmpeg's afir filter to every audio file in 'input_folder' 
@@ -58,9 +58,9 @@ def apply_afir_batch(
     print("All files have been processed.")
 
 if __name__ == "__main__":
-    dry_audio_folder = "../../data/clean_chunks"
+    dry_audio_folder = "../../data/clean"
     ir_wave = "../../data/IR/S2R1_M30.wav"
-    out_folder = "../../data/reverb_chunks_1"
+    out_folder = "../../data/reverb_1"
     
     apply_afir_batch(
         input_folder=dry_audio_folder,
