@@ -204,7 +204,6 @@ J. Le Roux, S. Wisdom, H. Erdogan, J. R. Hershey. *SDR – Half‑Baked or Well 
 ### DNSMOS (non-intrusive speech-quality metric)
 C. K. A. Reddy, V. Gopal, R. Cutler. DNSMOS: A Non-Intrusive Perceptual Objective Speech Quality Metric to Evaluate Noise Suppressors, 
 arXiv preprint arXiv:2010.15258, 2020.
-
 [https://arxiv.org/abs/2010.15258](https://arxiv.org/abs/2010.15258)
 
 ### PyTorch AMP (mixed precision)  
@@ -231,6 +230,7 @@ This project is intended for **speech quality enhancement**, such as:
 
 - Undoing intentional obfuscation (e.g., face blurring or audio masking)
 - Processing third-party media without consent
+
 
 
 
