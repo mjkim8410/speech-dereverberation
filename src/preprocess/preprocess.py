@@ -1,8 +1,8 @@
 import os
 import torchaudio
 
-input_dir = "data/clean"
-output_dir = "data/resampled_audio"
+input_dir = "../../data/clean_chunks"
+output_dir = "../../data/clean_chunks_wav"
 sample_rate_target = 16000
 
 os.makedirs(output_dir, exist_ok=True)

@@ -58,9 +58,9 @@ def apply_afir_batch(
     print("All files have been processed.")
 
 if __name__ == "__main__":
-    dry_audio_folder = "librivox_audiobooks/audio"
-    ir_wave = "librivox_audiobooks/IR/S2R1_M30.wav"
-    out_folder = "librivox_audiobooks/reverb3"
+    dry_audio_folder = "../../data/clean_chunks"
+    ir_wave = "../../data/IR/S2R1_M30.wav"
+    out_folder = "../../data/reverb_chunks_1"
     
     apply_afir_batch(
         input_folder=dry_audio_folder,
