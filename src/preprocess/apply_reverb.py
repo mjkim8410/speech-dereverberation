@@ -7,7 +7,7 @@ def apply_afir_batch(
     output_folder,
     wet,
     dry,
-    audio_extensions=(".wav")
+    irgain,
 ):
     """
     Applies FFmpeg's afir filter to every audio file in 'input_folder' 
@@ -18,54 +18,58 @@ def apply_afir_batch(
     :param output_folder:  Folder to save processed files. If None, uses input_folder.
     :param wet:            Wet level for afir.
     :param dry:            Dry level for afir.
-    :param audio_extensions: File extensions to look for in input_folder.
+    :param dry:            If 1, normalizes IR to unit energy.
     """
-    if output_folder is None:
-        output_folder = input_folder
     
     os.makedirs(output_folder, exist_ok=True)
     
     # Create the afir filter string
-    filter_str = f"afir=wet={wet}:dry={dry},volume=7.0"
+    filter_str = f"afir=wet={wet}:dry={dry}:irgain={irgain}"
     
-    # Loop through all files in input_folder
-    for file_name in os.listdir(input_folder):
-        # Check if file has an audio extension
-        if file_name.lower().endswith(audio_extensions):
-            input_path = os.path.join(input_folder, file_name)
-            
-            # Build output name (e.g., "example_afir.wav")
-            base, ext = os.path.splitext(file_name)
-            output_name = f"{base}_afir{ext}"
-            output_path = os.path.join(output_folder, output_name)
+    files = os.listdir(input_folder)
+    total = len(files)
+    counter = 0
 
-            # Construct FFmpeg command
-            cmd = [
-                "ffmpeg", "-y",
-                "-i", input_path,
-                "-i", ir_file,
-                "-filter_complex", filter_str,
-                "-c:a", "libmp3lame", 
-                "-b:a", "64k",
-                output_path
-            ]
-            
-            print(f"Processing: {file_name} with IR: {os.path.basename(ir_file)}")
-            
-            # Run the command
-            subprocess.run(cmd, check=True)
+    # Loop through all files in input_folder
+    for file_name in files:
+        input_path = os.path.join(input_folder, file_name)
+        
+        # Build output name (e.g., "example_afir.wav")
+        base, ext = os.path.splitext(file_name)
+        output_name = f"{base}_afir{ext}"
+        output_path = os.path.join(output_folder, output_name)
+
+        # Construct FFmpeg command
+        cmd = [
+            "ffmpeg", 
+            "-hide_banner",          # drop the start-up banner
+            "-loglevel", "error",    # only show errors (or use: warning / info / quiet / panic)
+            "-nostats",
+            "-y",
+            "-i", input_path,
+            "-i", ir_file,
+            "-filter_complex", filter_str,
+            "-c:a", "pcm_s16le", 
+            output_path
+        ]
+        
+        # Run the command
+        subprocess.run(cmd, check=True)
+        counter += 1
+        print(str(counter) + "/" + str(total) + " done")
     
     print("All files have been processed.")
 
 if __name__ == "__main__":
     dry_audio_folder = "../../data/clean"
-    ir_wave = "../../data/IR/S2R1_M30.wav"
-    out_folder = "../../data/reverb_1"
+    ir_wave = "../../data/IR/trimmed/1st_baptist_nashville_balcony_trimmed.wav"
+    out_folder = "../../data/reverbed/1st_baptist_nashville_balcony_10_10_0.1"
     
     apply_afir_batch(
         input_folder=dry_audio_folder,
         ir_file=ir_wave,
         output_folder=out_folder,
-        wet=2.0,
-        dry=7.0
+        wet=10, 
+        dry=10,
+        irgain=0.1
     )
