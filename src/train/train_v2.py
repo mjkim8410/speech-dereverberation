@@ -4,6 +4,8 @@ import torchaudio
 import bitsandbytes as bnb
 from torch.utils.data import ConcatDataset, Dataset, RandomSampler, DataLoader
 from torchmetrics.audio import ScaleInvariantSignalDistortionRatio
+from loss_functions import mrstft_loss, complex_stft_loss
+from utils import beep, grad_global_norm, clip_penalty,  load_datasets
 from model import ConvTasNet
 from tqdm import tqdm
 import pickle
@@ -16,131 +18,10 @@ BATCH_SIZE=6
 LR = 5e-5
 MAX_NORM = 10
 SUBSET = 0.1  # fraction of the dataset to use per epoch
-REVERB_DIRS = ["../../data/clean","../../data/reverb_sports-centre-university-york"]
+REVERB_DIRS = ["../../data/clean","../../data/reverbed/sports_centre_university_york"]
 CLEAN_DIR= "../../data/clean"
 ###############################
 
-def beep():
-    try:
-        import winsound
-        for i in range (2):
-            winsound.Beep(1000, 300)          # call at the end of each epoch
-        winsound.Beep(1500, 300)          # call after each epoch
-        winsound.Beep(2000, 300)          # call after each epoch
-    except RuntimeError:
-        pass  # audio device unavailable (RDP, headless)
-
-def grad_global_norm(model) -> float:
-    total = 0.0
-    for p in model.parameters():
-        if p.grad is not None:
-            param_norm = p.grad.data.norm(2)        # ‖g‖₂
-            total += param_norm.item() ** 2
-    return total ** 0.5
-
-def clip_penalty(wave, threshold=1.0, p=3):
-    excess = torch.relu(wave.abs() - threshold)*1e+2
-    return (excess**p).mean()
-
-def mrstft_loss(
-    y_hat: torch.Tensor, y: torch.Tensor, sr=16000,
-    fft_sizes=(512, 1024, 2048),
-    hop_sizes=(128, 256, 512),
-    win_lengths=(512, 1024, 2048),
-    alpha=0.5, beta=0.5, eps=1e-7, center=True
-    ):
-    """
-    y_hat, y: [B, T] waveform tensors
-    Returns scalar loss (mean over batch & resolutions).
-    """
-    assert y_hat.dim()==2 and y.dim()==2 and y_hat.shape==y.shape
-    device = y_hat.device
-    B = y_hat.size(0)
-
-    total = 0.0
-    n_res = len(fft_sizes)
-
-    for n_fft, hop, win_len in zip(fft_sizes, hop_sizes, win_lengths):
-        window = torch.hann_window(win_len, device=device)
-
-        # Use fp32 for STFT math even under AMP
-        Y  = torch.stft(y.float(),     n_fft=n_fft, hop_length=hop, win_length=win_len,
-                        window=window, center=center, return_complex=True)
-        Yh = torch.stft(y_hat.float(), n_fft=n_fft, hop_length=hop, win_length=win_len,
-                        window=window, center=center, return_complex=True)
-
-        mag  = Y.abs()
-        magh = Yh.abs()
-
-        # Spectral convergence
-        sc_num = torch.linalg.norm(mag - magh, ord='fro', dim=(-2, -1))
-        sc_den = torch.linalg.norm(mag,          ord='fro', dim=(-2, -1)) + eps
-        L_sc   = (sc_num / sc_den).mean()
-
-        # Log-mag L1
-        L_log = (torch.log(mag + eps) - torch.log(magh + eps)).abs().mean()
-
-        total += alpha * L_sc + beta * L_log
-
-    return total / n_res
-
-
-class DereverbDataset(Dataset):
-    def __init__(self, reverb_dir, clean_dir, sample_rate, chunk_size):
-        self.reverb_dir = reverb_dir
-        self.clean_dir = clean_dir
-        self.sample_rate = sample_rate
-        self.chunk_size = chunk_size
-        self.reverb_files = sorted(os.listdir(reverb_dir))
-    
-    def __len__(self):
-        return len(self.reverb_files)
-    
-    def __getitem__(self, idx):
-        rev_name = self.reverb_files[idx]
-        rev_path = os.path.join(self.reverb_dir, rev_name)
-        clean_path = os.path.join(self.clean_dir, rev_name)
-        
-        reverb_wave, sr1 = torchaudio.load(rev_path, backend="soundfile")
-        clean_wave, sr2 = torchaudio.load(clean_path, backend="soundfile")
-        
-        total_samples = reverb_wave.shape[1]
-        if total_samples > self.chunk_size:
-            start = torch.randint(0, total_samples - self.chunk_size, (1,)).item()
-            end = start + self.chunk_size
-            reverb_wave = reverb_wave[:, start:end]
-            clean_wave = clean_wave[:, start:end]
-        
-        return reverb_wave, clean_wave
-    
-def load_datasets(REVERB_DIRS, CLEAN_DIR):
-    reverb_dirs = REVERB_DIRS
-    clean_dir = CLEAN_DIR
-
-    # dataset_A = DereverbDataset(
-    #     reverb_dir=reverb_dirs[0],
-    #     clean_dir=clean_dir,
-    #     sample_rate=16000,
-    #     chunk_size=10 * 16000
-    # )
-
-    dataset_B = DereverbDataset(
-        reverb_dir=reverb_dirs[1],
-        clean_dir=clean_dir,
-        sample_rate=16000,
-        chunk_size=10 * 16000
-    )
-
-    # dataset_C = DereverbDataset(
-    #     reverb_dir=reverb_dirs[2],
-    #     clean_dir=clean_dir,
-    #     sample_rate=16000,
-    #     chunk_size=10 * 16000
-    # )
-
-    # return ConcatDataset([dataset_A, dataset_B, dataset_C])
-    # return ConcatDataset([dataset_B, dataset_C])
-    return dataset_B
 
 def build_model(CONTINUE_FROM_CHECKPOINT):
     model = ConvTasNet(
@@ -240,10 +121,12 @@ def train_one_epoch(model, optimizer, epoch):
         loss_si_sdr = -si_sdr(enhanced_wave.float().squeeze(1), clean_wave.float().squeeze(1))
         loss_mr = mrstft_loss(enhanced_wave.squeeze(1), clean_wave.squeeze(1), 
                               fft_sizes=(512,1024,2048), hop_sizes=(128,256,512), win_lengths=(512,1024,2048))
+        loss_com_mr = complex_stft_loss(enhanced_wave.squeeze(1), clean_wave.squeeze(1), 
+                              fft_sizes=(512,1024,2048), hop_sizes=(128,256,512), win_lengths=(512,1024,2048))
         # loss_clip = clip_penalty(enhanced_wave, threshold)
 
         # loss = loss_si_sdr + λ * loss_clip
-        loss = loss_si_sdr + λ * loss_mr
+        loss = loss_si_sdr + λ * loss_mr + λ * loss_com_mr
         # loss = loss_si_sdr
 
         if excess.mean().item() > 0:
