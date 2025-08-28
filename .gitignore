@@ -2,3 +2,4 @@ data/
 checkpoints/
 out/
 **/__pycache__/
+src/evaluate/loss_data/
