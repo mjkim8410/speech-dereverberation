@@ -1,4 +1,4 @@
 data/
 checkpoints/
 out/
-src/train/__pycache__/
+**/__pycache__/
