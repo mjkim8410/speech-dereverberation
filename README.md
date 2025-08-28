@@ -134,18 +134,18 @@ LibriVox offers diverse accents, speaker styles, and recording conditions, provi
 - All audio is converted to **mono**, sampled at **16 kHz**, and segmented into **10-second chunks** in **WAV**
 - Original audio had its quality measured by using **DNSMOS** with the results shown below.
 <p align="center">
-  <img src="dnsmos_plots/p808_density_orig.png"  width="22%">
-  <img src="dnsmos_plots/sig_density_orig.png"   width="22%">
-  <img src="dnsmos_plots/bak_density_orig.png"   width="22%">
-  <img src="dnsmos_plots/ovrl_density_orig.png"  width="22%">
+  <img src="plots/dnsmos_plots/p808_density_orig.png"  width="22%">
+  <img src="plots/dnsmos_plots/sig_density_orig.png"   width="22%">
+  <img src="plots/dnsmos_plots/bak_density_orig.png"   width="22%">
+  <img src="plots/dnsmos_plots/ovrl_density_orig.png"  width="22%">
 </p>
 
 - Any clip that did not meet the quality thresholds—**P808 < 3.5, SIG < 3.55, BAK < 4.0, or OVRL < 3.2**—was discarded. The score distributions after filtering are shown below.
 <p align="center">
-  <img src="dnsmos_plots/p808_density.png"  width="22%">
-  <img src="dnsmos_plots/sig_density.png"   width="22%">
-  <img src="dnsmos_plots/bak_density.png"   width="22%">
-  <img src="dnsmos_plots/ovrl_density.png"  width="22%">
+  <img src="plots/dnsmos_plots/p808_density.png"  width="22%">
+  <img src="plots/dnsmos_plots/sig_density.png"   width="22%">
+  <img src="plots/dnsmos_plots/bak_density.png"   width="22%">
+  <img src="plots/dnsmos_plots/ovrl_density.png"  width="22%">
 </p>
 
 - Few clips that had peaks were also discarded. 
@@ -230,6 +230,7 @@ This project is intended for **speech quality enhancement**, such as:
 
 - Undoing intentional obfuscation (e.g., face blurring or audio masking)
 - Processing third-party media without consent
+
 
 
 
