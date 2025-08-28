@@ -1,6 +1,5 @@
 import os
 import torch
-import torchaudio
 import bitsandbytes as bnb
 from torch.utils.data import ConcatDataset, Dataset, RandomSampler, DataLoader
 from torchmetrics.audio import ScaleInvariantSignalDistortionRatio
@@ -52,9 +51,6 @@ def build_model(CONTINUE_FROM_CHECKPOINT):
     return model, optimizer
 
 def get_optimizer(model):
-    ###############################################################################
-    # build parameter groups for weight-decay vs. no-decay
-    ###############################################################################
     decay, no_decay = [], []
 
     for name, param in model.named_parameters():
@@ -148,20 +144,15 @@ def train_one_epoch(model, optimizer, epoch):
         # Update progress bar
         loop.set_postfix(ls=current_loss, mr=loss_mr.item(), avg=average_loss, g=f"{global_g:.2e}", ex=f"{total_excess/len(dloader):.2e}")
     
-    with open('../evaluate/loss_data/v2_loss_epoch_0' + str(epoch+ITER+1) + '.pkl', 'wb') as file:
+    with open('../evaluate/loss_data/v2/v2_loss_epoch_0' + str(epoch+ITER+1) + '.pkl', 'wb') as file:
         pickle.dump(si_sdr_list, file)
 
-    with open('../evaluate/loss_data/v2_mr_loss_epoch_0' + str(epoch+ITER+1) + '.pkl', 'wb') as file:
+    with open('../evaluate/loss_data/v2/v2_mr_loss_epoch_0' + str(epoch+ITER+1) + '.pkl', 'wb') as file:
         pickle.dump(mr_list, file)
         
     average_loss = total_loss/len(dloader)
     print(f"Epoch {epoch+ITER+1} finished with average batch loss={average_loss:.6f}")
     
-    # -------------------------
-    # SAVE CHECKPOINT
-    # -------------------------
-
-    # Create a folder for saving model checkpoints
     os.makedirs("../../checkpoints/v2", exist_ok=True)
 
     checkpoint_path = os.path.join("../../checkpoints/v2", f"v2_model_epoch_{epoch+ITER+1}_{average_loss}.pth")

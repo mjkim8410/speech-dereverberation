@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-input_folder = Path("loss_data")
+input_folder = Path("loss_data/v2")
 window = 500
 
 def load_loss_data(file_name):
@@ -50,8 +50,8 @@ smooth_mr = smooth_loss(mr_list, window)
 mr_list = left_pad_to_match(mr_list, si_sdr_list.size)
 smooth_mr = left_pad_to_match(smooth_mr, smooth_si_sdr.size)
 
-plot_series(si_sdr_list, mr_list, "Loss", "v2_loss.png")
-plot_series(smooth_si_sdr, smooth_mr, f"Loss (moving avg, window={window})", "v2_smooth_loss.png")
+plot_series(si_sdr_list, mr_list, "Loss", "eval_plots/v2_loss.png")
+plot_series(smooth_si_sdr, smooth_mr, f"Loss (moving avg, window={window})", "eval_plots/v2_smooth_loss.png")
 
 smooth_mr = smooth_loss(smooth_mr, 2000)
 
@@ -61,5 +61,5 @@ plt.xlabel("Batch"); plt.ylabel("Loss"); plt.title("MR-STFT")
 plt.grid(True, which='major', alpha=0.5)
 plt.grid(which='minor', linestyle=':', linewidth=0.4)
 plt.minorticks_on(); plt.legend(); plt.tight_layout()
-plt.savefig("v2_smooth_mr_loss.png", dpi=150); plt.close()
+plt.savefig("eval_plots/v2_smooth_mr_loss.png", dpi=150); plt.close()
 print(f"Saved plot: {"v2_smooth_mr_loss.png"}  (n1={smooth_mr.size}, mean={np.nanmean(smooth_mr):.6f}")
