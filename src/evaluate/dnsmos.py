@@ -25,8 +25,8 @@ from torch.nn.utils.rnn import pad_sequence
 from torchmetrics.functional.audio.dnsmos import deep_noise_suppression_mean_opinion_score
 
 # ─────────────── constants ───────────────────────────────────────────────────
-FILES_GLOB   = "../../data/clean_chunks_wav/*.wav"  # where to find WAVs
-PLOTS_DIR    = "./dnsmos_plots"                     # where to save histograms
+FILES_GLOB   = "../../data/reverb_sports-centre-university-york/*.wav"  # where to find WAVs
+PLOTS_DIR    = "../../dnsmos_plots/reverb_sports-centre-university-york"                     # where to save histograms
 P808_MIN     = 3.5                                  # prune if p808 < THRESHOLD
 SIG_MIN      = 3.55                                 # prune if sig  < SIG_MIN
 BAK_MIN      = 4.0                                  # prune if bak  < BAK_MIN
@@ -34,13 +34,13 @@ OVRL_MIN     = 3.2                                  # prune if ovrl < OVRL_MIN
 SR           = 16000                                # target sample‑rate Hz
 BATCH_SIZE   = 1                                    # num clips per GPU batch
 DEVICE       = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-DELETE_FILES = True                                 # True ⇒ actually os.remove()
+DELETE_FILES = False                                 # True ⇒ actually os.remove()
 # ─────────────────────────────────────────────────────────────────────────────
 
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
 def load_wav(path: str) -> torch.Tensor:
-    """Load a mono waveform at SR Hz (tensor shape: 1×T)."""
+    """Load a mono waveform at SR Hz (tensor shape: 1xT)."""
     wav, _ = torchaudio.load(path)  # stereo shape (C×T)
     wav = wav.mean(dim=0, keepdim=True)  # mono
     return wav.squeeze(0)                # → (T,)
@@ -108,13 +108,13 @@ def main() -> None:
             p808, sig, bak, ovrl = sc
             p808_vals.append(p808); sig_vals.append(sig); bak_vals.append(bak); ovrl_vals.append(ovrl)
 
-            if (p808 < P808_MIN) or (sig < SIG_MIN) or (bak < BAK_MIN) or (ovrl < OVRL_MIN):
-                if DELETE_FILES:
-                    try:
-                        path.unlink()
-                    except Exception:
-                        pass
-                deleted += 1
+            # if (p808 < P808_MIN) or (sig < SIG_MIN) or (bak < BAK_MIN) or (ovrl < OVRL_MIN):
+            #     if DELETE_FILES:
+            #         try:
+            #             path.unlink()
+            #         except Exception:
+            #             pass
+            #     deleted += 1
 
         outer.set_postfix(deleted=deleted, err=errors)
 

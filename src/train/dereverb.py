@@ -52,26 +52,26 @@ def load_audio_as_tensor(path: str, sr_target: int = 16_000) -> torch.Tensor:
 # 3.  Main
 # ------------------------------------------------------------------
 if __name__ == "__main__":
-    ckpt = torch.load("../../checkpoints_v3/v3_model_epoch_253.pth", map_location="cpu")
+    ckpt = torch.load("../../checkpoints/v2/v2_model_epoch_8_-13.898161352912235.pth", map_location="cpu")
     model = ConvTasNet(
         num_sources=1,
         encoder_kernel_size=32,
         encoder_stride=16,
-        encoder_filters=2048,
-        tcn_hidden=1024,
+        encoder_filters=1024,
+        tcn_hidden=512,
         tcn_kernel_size=7,
-        tcn_layers=8,
+        tcn_layers=7,
         tcn_stacks=7,
         causal=False
-    )
+    ).cuda()
     model.load_state_dict(ckpt["model_state_dict"])
     print("Loaded checkpoint epoch", ckpt.get("epoch", "?"))
     model.cuda().eval()
 
-    wav_in = load_audio_as_tensor("../../data/audio_segmented/01-Marxism lecture by Prof Raymond Geuss 5_8-consolidated_0000.mp3").cuda()
+    wav_in = load_audio_as_tensor("../../data/test_audio/01-Marxism lecture by Prof Raymond Geuss 5_8-consolidated_0017_16k.wav").cuda()
     print(wav_in)
 
-    with torch.no_grad(), torch.autocast("cuda", dtype=torch.float16):
+    with torch.no_grad(), torch.autocast("cuda", dtype=torch.float32):
         wav_out = model(wav_in)
     if wav_out.dim() == 3:
         wav_out = wav_out.squeeze(1)
@@ -86,3 +86,8 @@ if __name__ == "__main__":
 
     residual = wav_in - wav_out
     save_tensor_as_wav(residual, 16_000, "../../out/residual_output.wav", bits=32)
+
+
+
+
+
