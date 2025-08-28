@@ -24,7 +24,7 @@ def apply_afir_batch(
     os.makedirs(output_folder, exist_ok=True)
     
     # Create the afir filter string
-    filter_str = f"afir=wet={wet}:dry={dry}:irgain={irgain}"
+    filter_str = f"afir=wet={wet}:dry={dry}:irgain={irgain},volume=1"
     
     files = os.listdir(input_folder)
     total = len(files)
@@ -62,14 +62,14 @@ def apply_afir_batch(
 
 if __name__ == "__main__":
     dry_audio_folder = "../../data/clean"
-    ir_wave = "../../data/IR/trimmed/1st_baptist_nashville_balcony_trimmed.wav"
-    out_folder = "../../data/reverbed/1st_baptist_nashville_balcony_10_10_0.1"
+    ir_wave = "../../data/IR/trimmed/Room005-00007.wav"
+    out_folder = "E:/data/reverbed/Room005-00007_10_10_0.1"
     
     apply_afir_batch(
         input_folder=dry_audio_folder,
         ir_file=ir_wave,
         output_folder=out_folder,
-        wet=10, 
+        wet=1.4, 
         dry=10,
-        irgain=0.1
+        irgain=0.5
     )
