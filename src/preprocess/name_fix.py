@@ -31,5 +31,9 @@ def remove_afir_suffix(folder_path):
                 print(f"Renamed: {filename} -> {new_filename}")
 
 if __name__ == "__main__":
-    reverb_folder = '../../data/reverb_sports-centre-university-york'
-    remove_afir_suffix(reverb_folder)
+    for path in [
+        'E:/data/reverbed/1st_baptist_nashville_balcony',
+        'E:/data/reverbed/air_type1_air_binaural_aula_carolina_1_3_135_3',
+        'E:/data/reverbed/Room005-00007'
+    ]:
+        remove_afir_suffix(path)
