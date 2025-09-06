@@ -1,5 +1,6 @@
 import torch, torchaudio, os
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, ConcatDataset
+import random
 
 def beep():
     try:
@@ -56,27 +57,69 @@ def load_datasets(REVERB_DIRS, CLEAN_DIR):
     reverb_dirs = REVERB_DIRS
     clean_dir = CLEAN_DIR
 
-    # dataset_A = DereverbDataset(
-    #     reverb_dir=reverb_dirs[0],
-    #     clean_dir=clean_dir,
-    #     sample_rate=16000,
-    #     chunk_size=10 * 16000
-    # )
+    dataset_A = DereverbDataset(
+        reverb_dir=reverb_dirs[0],
+        clean_dir=clean_dir,
+        sample_rate=16000,
+        chunk_size=10 * 16000
+    )
 
     dataset_B = DereverbDataset(
         reverb_dir=reverb_dirs[1],
         clean_dir=clean_dir,
         sample_rate=16000,
         chunk_size=10 * 16000
+    ) 
+
+    dataset_C = DereverbDataset(
+        reverb_dir=reverb_dirs[2],
+        clean_dir=clean_dir,
+        sample_rate=16000,
+        chunk_size=10 * 16000
     )
 
-    # dataset_C = DereverbDataset(
-    #     reverb_dir=reverb_dirs[2],
-    #     clean_dir=clean_dir,
-    #     sample_rate=16000,
-    #     chunk_size=10 * 16000
-    # )
+    """ dataset_D = DereverbDataset(
+        reverb_dir=reverb_dirs[3],
+        clean_dir=clean_dir,
+        sample_rate=16000,
+        chunk_size=10 * 16000
+    ) """
 
-    # return ConcatDataset([dataset_A, dataset_B, dataset_C])
-    # return ConcatDataset([dataset_B, dataset_C])
+    """ dataset_E = DereverbDataset(
+        reverb_dir=reverb_dirs[4],
+        clean_dir=clean_dir,
+        sample_rate=16000,
+        chunk_size=10 * 16000
+    ) """
+
+    return ConcatDataset([dataset_A, dataset_B, dataset_C])
+    return ConcatDataset([dataset_A, dataset_B, dataset_C, dataset_D, dataset_E])
+    
     return dataset_B
+
+def mix_clean_reverb(clean_wave: torch.Tensor, reverb_wave: torch.Tensor):
+    """
+    Mix between clean and reverb with a random factor in [0,1].
+    0 = only clean, 1 = only reverb.
+    
+    Args:
+        clean_wave:  [C,T] tensor
+        reverb_wave: [C,T] tensor
+    
+    Returns:
+        mixed: [C,T] tensor
+        mix_factor: float in [0,1] used for mixing
+    """
+    # Align lengths (crop to min)
+    T = min(clean_wave.size(-1), reverb_wave.size(-1))
+    c = clean_wave[..., :T]
+    r = reverb_wave[..., :T]
+    
+    # Random mixing factor
+    mix_factor = random.random()  # uniform [0,1)
+    
+    mixed = (1 - mix_factor) * c + mix_factor * r
+    # Optional clamp
+    mixed = mixed.clamp(-1.0, 1.0)
+    
+    return mixed
