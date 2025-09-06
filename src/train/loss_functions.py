@@ -2,9 +2,9 @@ import torch
 
 def mrstft_loss(
     y_hat: torch.Tensor, y: torch.Tensor, sr=16000,
-    fft_sizes=(512, 1024, 2048),
-    hop_sizes=(128, 256, 512),
-    win_lengths=(512, 1024, 2048),
+    fft_sizes   = (256, 512, 1024, 2048, 4096),
+    hop_sizes   = (64, 128, 256, 512, 1024),
+    win_lengths = (256, 512, 1024, 2048, 4096),
     alpha=0.5, beta=0.5, eps=1e-7, center=True
     ):
     """
@@ -44,20 +44,18 @@ def mrstft_loss(
 
 def complex_stft_loss(
     y_hat: torch.Tensor, y: torch.Tensor,
-    sr=16000,
-    fft_sizes=(512, 1024, 2048),
-    hop_sizes=(128, 256, 512),
-    win_lengths=(512, 1024, 2048),
-    center=True
+    fft_sizes   = (256, 512, 1024, 2048, 4096),
+    hop_sizes   = (64, 128, 256, 512, 1024),
+    win_lengths = (256, 512, 1024, 2048, 4096),
+    center=True,
+    eps=1e-8
     ):
     """
-    Multi-resolution complex STFT loss.
+    Multi-resolution complex STFT loss (L2).
     Compares real+imag (phase-aware) STFTs between prediction and target.
 
     Args:
         y_hat, y: [B, T] waveforms
-        sr: sample rate
-        fft_sizes, hop_sizes, win_lengths: tuples of STFT params
     Returns:
         scalar loss (mean over batch & resolutions)
     """
@@ -74,8 +72,9 @@ def complex_stft_loss(
         Yh = torch.stft(y_hat.float(), n_fft, hop, win_len,
                         window=win, center=center, return_complex=True)
 
-        # L1 distance in complex domain
-        loss = (Y - Yh).abs().mean()
+        diff = Y - Yh
+        # L2 distance in complex domain
+        loss = torch.sqrt(diff.real**2 + diff.imag**2 + eps).mean()
 
         total += loss
 
