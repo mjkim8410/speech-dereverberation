@@ -28,7 +28,10 @@
 
 ## Overview
 
-This repo trains a **single‑channel speech dereverberation** model directly in the **time domain**. It follows the Conv‑TasNet idea: learn an analysis filterbank, enhance with stacked dilated temporal convolution (TCN) blocks, then resynthesize via a synthesis filterbank. Conv‑TasNet has proven highly effective for time‑domain source separation, and the same mechanics transfer to dereverberation.
+Reverberation significantly degrades speech intelligibility in real-world environments such as indoor recordings and teleconferencing.  
+This project explores an **end-to-end time-domain approach** to remove reverberation directly from raw audio signals without relying on STFT-based methods.
+
+The model is based on the Conv-TasNet architecture, adapted for **single-channel speech dereverberation**, and trained using a scale-invariant objective.
 
 **Key features**
 - **Time‑domain** end‑to‑end training (no STFT required)
@@ -36,6 +39,17 @@ This repo trains a **single‑channel speech dereverberation** model directly in
 - **Negative SI‑SDR** training objective
 - Mixed precision (AMP) and optional **8‑bit Adam/AdamW** (bitsandbytes) to cut optimizer memory
 - Simple dataset interface for paired *(reverb, clean)* audio segments
+
+---
+
+## What I Did
+
+- Designed and implemented a Conv-TasNet based architecture for single-channel speech dereverberation
+- Built a full training pipeline in PyTorch, including mixed precision (AMP) training
+- Processed and filtered **1,800+ hours of speech data** using DNSMOS-based quality thresholds
+- Implemented reverberation augmentation using OpenAIR room impulse response (RIR) datasets
+- Designed and applied SI-SDR based loss function and evaluation pipeline
+- Structured the project for reproducible training and experimentation
 
 ---
 
