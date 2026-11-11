@@ -183,15 +183,6 @@ SUBSET=0.01          # fraction of dataset sampled per epoch
 REVERB_DIRS=[...]
 CLEAN_DIR="..."
 ```
-## Results 
-
-*Fill this once training is complete.*
-
-| Model (16 kHz)                | Parameters | Train Data   | Validation SI‑SDR ↑ |
-|------------------------------|------------|--------------|----------------------|
-| Conv‑TasNet (512‑128, 3×8)   | ~8 M       | YourDataset  | XX.X dB              |
-| Larger (1024‑512, 7×8)       | ~35 M      | YourDataset  | YY.Y dB              |
-
 
 ## Roadmap
 
