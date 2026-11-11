@@ -7,8 +7,8 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-> ⚠️ **Project status: Active development**  
-> This repository is a work in progress. Interfaces, file paths, and results may change without notice until the first stable release.
+> ⚠️ **Project status: Discontinued**  
+> After training the model exhaustively under various conditions including different model sizes and reward functions, the enhanced audio remained perceptually unsatisfactory. I was unable to establish the underlying cause, and further development was discontinued.
 
 ## Table of Contents
 - [Overview](#overview)
